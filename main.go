@@ -8,10 +8,11 @@ import (
 )
 
 func main() {
-	log_file, err := os.OpenFile("Log.json", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	log_file, err := os.OpenFile("Log.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		panic("Error when opening log file.")
 	}
+	defer log_file.Close()
 	sugar_logger := logInit(false, log_file)
 
 	//Pass sugar to other objects
@@ -25,16 +26,16 @@ func logInit(d bool, f *os.File) *zap.SugaredLogger {
 	fileEncoder := zapcore.NewJSONEncoder(pe)
 
 	pe.EncodeTime = zapcore.ISO8601TimeEncoder // The encoder can be customized for each output
-	consoleEncoder := zapcore.NewConsoleEncoder(pe)
+	//consoleEncoder := zapcore.NewConsoleEncoder(pe)
 
-	level := zap.ErrorLevel
+	level := zap.InfoLevel
 	if d {
 		level = zap.DebugLevel
 	}
 
 	core := zapcore.NewTee(
 		zapcore.NewCore(fileEncoder, zapcore.AddSync(f), level),
-		zapcore.NewCore(consoleEncoder, zapcore.AddSync(os.Stdout), level),
+		//zapcore.NewCore(consoleEncoder, zapcore.AddSync(os.Stdout), level), //Uncomment if you want logs in console
 	)
 
 	l := zap.New(core) // Creating the logger
