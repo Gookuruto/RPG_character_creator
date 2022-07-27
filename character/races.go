@@ -22,15 +22,18 @@ func CreateDefinedRace(raceName string) (*Race, error) {
 	case "Dwarf":
 		return Dwarf(), nil
 	case "Human":
+		return Human(), nil
 	case "Orc":
 		return Orc(), nil
 	case "Elven":
+		return Elven(), nil
 	case "Half-orc":
+		return HalfOrc(), nil
 	case "Half-elven":
+		return HalfElven(), nil
 	default:
 		return nil, fmt.Errorf("Race %s not exist", raceName)
 	}
-	return nil, nil
 }
 
 func Dwarf() *Race {
@@ -49,12 +52,31 @@ func Orc() *Race {
 	return &Race{Name: "Orc", Modifiers: modifier, Traits: features}
 }
 
+func HalfOrc() *Race {
+	modifier := Stats{Strength: 2, Constitution: 2, Dexterity: 1}
+	features := make([]Feature, 0)
+	return &Race{Name: "Half-Orc", Modifiers: modifier, Traits: features}
+
+}
+
 func Elven() *Race {
-	modifier := Stats{Dexterity: 2, Wisdom: 2, Inteligence:  1}
+	modifier := Stats{Dexterity: 2, Wisdom: 2, Inteligence: 1}
 	features := make([]Feature, 2)
 	features[0] = Feature{Name: "Hawk Eye", Description: "Increase accuracy with range weapons by 10"}
 	features[1] = Feature{Name: "Precise Eye", Description: "Increase critical chance by 10% with ranged weapons and spells."}
 	return &Race{Name: "Elven", Modifiers: modifier, Traits: features}
+}
+
+func HalfElven() *Race {
+	modifier := Stats{Charisma: 2, Dexterity: 2, Wisdom: 1}
+	features := make([]Feature, 0)
+	return &Race{Name: "Half-Elven", Modifiers: modifier, Traits: features}
+}
+
+func Human() *Race {
+	modifier := Stats{Charisma: 2, Wisdom: 1, Strength: 1, Dexterity: 1}
+	features := make([]Feature, 0)
+	return &Race{Name: "Human", Modifiers: modifier, Traits: features}
 }
 
 func (race *Race) SaveToJson(path string) {
